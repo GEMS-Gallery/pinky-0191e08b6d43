@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Container, Grid, Paper, Button, TextField, Typography, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import { useForm, Controller } from 'react-hook-form';
 import { backend } from 'declarations/backend';
 
 const theme = createTheme({
@@ -28,7 +26,6 @@ function App() {
   const [display, setDisplay] = useState('0');
   const [history, setHistory] = useState<CalculationResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit, reset } = useForm();
 
   useEffect(() => {
     fetchHistory();
@@ -65,28 +62,6 @@ function App() {
     } catch (error) {
       console.error('Calculation error:', error);
       setDisplay('Error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onSubmit = async (data: { email: string }) => {
-    try {
-      setLoading(true);
-      const subject = 'Calculator Results';
-      const body = `Here are your recent calculations:\n${history
-        .map((calc) => `${calc.operation} = ${calc.result}`)
-        .join('\n')}`;
-      const result = await backend.sendEmail(data.email, subject, body);
-      if ('ok' in result) {
-        alert('Email sent successfully!');
-        reset();
-      } else {
-        alert('Failed to send email: ' + result.err);
-      }
-    } catch (error) {
-      console.error('Email sending error:', error);
-      alert('Failed to send email');
     } finally {
       setLoading(false);
     }
@@ -141,35 +116,6 @@ function App() {
                   </ListItem>
                 ))}
               </List>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Controller
-                  name="email"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } }}
-                  render={({ field, fieldState: { error } }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Email"
-                      variant="outlined"
-                      error={!!error}
-                      helperText={error?.message}
-                      sx={{ mb: 2 }}
-                    />
-                  )}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  fullWidth
-                  startIcon={<SendIcon />}
-                  disabled={loading}
-                >
-                  {loading ? <CircularProgress size={24} /> : 'Send History'}
-                </Button>
-              </form>
             </Paper>
           </Grid>
         </Grid>

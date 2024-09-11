@@ -1,12 +1,7 @@
-type Result_1 = 
- variant {
-   err: text;
-   ok: float64;
- };
 type Result = 
  variant {
    err: text;
-   ok: text;
+   ok: float64;
  };
 type CalculationResult = 
  record {
@@ -14,7 +9,6 @@ type CalculationResult =
    result: float64;
  };
 service : {
-  calculate: (text, float64, float64) -> (Result_1);
+  calculate: (text, float64, float64) -> (Result);
   getHistory: () -> (vec CalculationResult) query;
-  sendEmail: (text, text, text) -> (Result);
 }

@@ -42,14 +42,4 @@ actor Calculator {
   public query func getHistory() : async [CalculationResult] {
     history
   };
-
-  public func sendEmail(to: Text, subject: Text, body: Text) : async Result.Result<Text, Text> {
-    // Note: This is a mock implementation as the IC doesn't have a built-in email sending capability
-    // In a real-world scenario, you would integrate with an external email service
-    if (Text.size(to) > 0 and Text.size(subject) > 0 and Text.size(body) > 0) {
-      #ok("Email sent successfully")
-    } else {
-      #err("Invalid email parameters")
-    }
-  };
 }
